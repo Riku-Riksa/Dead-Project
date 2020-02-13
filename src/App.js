@@ -4,7 +4,7 @@ import { useQuery} from '@apollo/react-hooks';
 import gql from "graphql-tag";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
+//Define our query
 const kysely = gql`
 {
   plan(
@@ -52,31 +52,33 @@ function kmTotal (b) {
   return total;
 }
 
+// What we return to the DOM renderer
 function App() {
 
 const { data , loading, error} = useQuery(kysely);
 
-if (loading) return <p>loading</p>;
-if (error) return <p>error lulz {error.message}</p>;
+if (loading) return <div class="lds-dual-ring"></div>;
+if (error) return <p>Something went wrong : {error.message}</p>;
 
 console.log(data);
 
 return (
   <React.Fragment>
-    {data && data.plan && data.plan.itineraries  && data.plan.itineraries.map((itineraries, indx) => ( //I have no idea what this is doing
+    {data && data.plan && data.plan.itineraries && data.plan.itineraries.map((itineraries, indx) => ( 
       <div key = {indx}>
         <h2>Total amount to walk during trip: {kmTotal(itineraries.walkDistance)}km</h2>
+        <div>{itineraries.legs.mode}</div>
           <div>
-            {itineraries.legs && itineraries.legs.map((i, indeksi) => {
-              return <div key = {indeksi}>{i.mode}
+            {itineraries.legs.map((i, indeksi) => ( //routeShortName is null? or unidentified if .trip is added after legs.
+              <div key = {indeksi}>
+              <div> {i.mode} </div>
+              <div> {kmTotal(i.distance)} km</div>
               <p>{toMin(i.duration)} minutes</p>
-              </div>
-            })}
-            {(itineraries.legs.trip || []).map((p, indos) => ( //the first trip is null so we need something to fix that! Also now its not showing anything :D
-              <div key = {indos}>{p.trip.departureStoptime.scheduledDeparture}
-              <p>{p.trip.routeShortName} {p.trip.tripHeadsign}</p>
-              </div>
+              <p>{i.trip.routeShortName}</p>
+              </div> 
             ))}
+            <div>
+            </div>
           </div>
       </div>
     ))}

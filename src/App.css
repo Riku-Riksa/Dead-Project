@@ -41,6 +41,7 @@
   display: inline-block;
   width: 100px;
   height: 100px;
+  text-align: center;
   
 }
 .lds-dual-ring:after {
@@ -53,6 +54,7 @@
   border: 6px solid #61dafb;
   border-color: #61dafb transparent #61dafb transparent;
   animation: lds-dual-ring 1.2s linear infinite;
+  text-align: center;
 }
 @keyframes lds-dual-ring {
   0% {
